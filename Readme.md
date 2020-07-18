@@ -2,8 +2,8 @@
 
   <h2> <u>DOCKER IMAGE</u> </h2>
     apa_php:
-        php apache with composer:
-          composer install yii2 advanced
+            php apache with composer:
+            composer install yii2 advanced
 
     mysql:
 
