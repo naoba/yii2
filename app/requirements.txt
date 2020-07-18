@@ -1,0 +1,1 @@
+create-project --prefer-dist --stability=dev yiisoft/yii2-app-advanced yii_advanced
