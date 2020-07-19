@@ -1,9 +1,19 @@
 version: '3'
 
 services:
-    appyii:
-      
+# PHP APACHE COMPOSER
+    phpcom:
+      build: .
+      container_name: phpcom
+      ports:
+        - "80:80"
+      volumes:
+        - ./app /var/www/html/
+      command:
+        service apache start
+      restart: always
 
+# MYSQL
     db:
       image: mysql:5.7
       container_name: db
@@ -16,6 +26,9 @@ services:
         - "6033:3306"
       volumes:
         - dbdata:/var/lib/mysql
+      restart: always
+
+# PHPMYADMIN
     phpmyadmin:
       image: phpmyadmin/phpmyadmin
       container_name: pma
