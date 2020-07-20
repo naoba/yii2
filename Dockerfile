@@ -12,7 +12,6 @@ RUN apt-get update && apt-get install -y \
     zip \
     unzip
 
-
 WORKDIR /var/www/html
 
 RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"

@@ -1,32 +1,39 @@
 version: '3'
 
+Network:
+  php_app:
+
 services:
 # PHP APACHE COMPOSER
     phpcom:
       build: .
       container_name: phpcom
       ports:
-        - "80:80"
+        - "8080:80"
       volumes:
-        - ./app /var/www/html/
+        - ./app:/var/www/html/
       command:
         service apache start
-      restart: always
+      restart: unless-stop
+      Network:
+        - php_app
+      links:
+        - db
 
 # MYSQL
     db:
       image: mysql:5.7
       container_name: db
       environment:
-        MYSQL_ROOT_PASSWORD: my_secret_password
+        MYSQL_ROOT_PASSWORD: Root@password
         MYSQL_DATABASE: app_db
-        MYSQL_USER: db_user
-        MYSQL_PASSWORD: db_user_pass
-      ports:
-        - "6033:3306"
+        MYSQL_USER: user
+        MYSQL_PASSWORD: user_pass
       volumes:
-        - dbdata:/var/lib/mysql
+        - mysql_data:/var/lib/mysql
       restart: always
+      Network:
+        - php_app
 
 # PHPMYADMIN
     phpmyadmin:
@@ -41,5 +48,5 @@ services:
       restart: always
       ports:
         - 8081:80
-  volumes:
-    dbdata:
+      Network:
+        - php_app
