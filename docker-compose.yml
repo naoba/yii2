@@ -1,52 +1,48 @@
 version: '3'
 
-Network:
-  php_app:
-
 services:
-# PHP APACHE COMPOSER
-    phpcom:
-      build: .
+  db:
+    image: mysql:5.7
+    container_name: db
+    environment:
+      MYSQL_ROOT_PASSWORD: my_secret_password
+      MYSQL_DATABASE: app_db
+      MYSQL_USER: db_user
+      MYSQL_PASSWORD: db_user_pass
+    ports:
+      - "6033:3306"
+    volumes:
+      - ./dbdata:/var/lib/mysql
+    networks:
+      - phpnetworks
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: pma
+    links:
+      - db
+    environment:
+      PMA_HOST: db
+      PMA_HOSTS: dbadmin
+      PMA_PORT: 3306
+      PMA_ARBITRARY: 1
+    restart: always
+    ports:
+      - 8081:80
+    networks:
+      - phpnetworks
+  phpcom:
+      build:
+        context: ./
       container_name: phpcom
       ports:
         - "8080:80"
       volumes:
         - ./app:/var/www/html/
-      command:
-        service apache start
-      restart: unless-stop
-      Network:
-        - php_app
-      links:
+      restart: always
+      networks:
+        - phpnetworks
+      depends_on:
         - db
 
-# MYSQL
-    db:
-      image: mysql:5.7
-      container_name: db
-      environment:
-        MYSQL_ROOT_PASSWORD: Root@password
-        MYSQL_DATABASE: app_db
-        MYSQL_USER: user
-        MYSQL_PASSWORD: user_pass
-      volumes:
-        - mysql_data:/var/lib/mysql
-      restart: always
-      Network:
-        - php_app
-
-# PHPMYADMIN
-    phpmyadmin:
-      image: phpmyadmin/phpmyadmin
-      container_name: pma
-      links:
-        - db
-      environment:
-        PMA_HOST: db
-        PMA_PORT: 3306
-        PMA_ARBITRARY: 1
-      restart: always
-      ports:
-        - 8081:80
-      Network:
-        - php_app
+networks:
+  phpnetworks:
