@@ -1,1 +1,4 @@
-<?php echo "HELLO WORLD" ?>
+<?php
+header("Location: /yii_advanced/frontend/web/");
+die();
+ ?>
